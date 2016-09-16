@@ -1,0 +1,6 @@
+{
+    "require": {
+        "firebase/php-jwt": "^4.0",
+        "mishal/jwt": "^1.0"
+    }
+}

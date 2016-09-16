@@ -1,67 +1,31 @@
-<html>
-<body>
-<xmp>
 <?php
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/common.php';
 
-$shared_key = "secret";
-$private_key = file_get_contents('private.pem');
-$public_key = file_get_contents('public.pem');
+use Jwt\Jwt;
+use Jwt\Algorithm\NoneAlgorithm;
+use Jwt\Algorithm\HS256Algorithm;
+use Jwt\Algorithm\RS256Algorithm;
 
-$auth_header = $_SERVER['HTTP_AUTHORIZATION'] ?? $_REQUEST['jwt'];
-if (stripos($auth_header, 'bearer ') === 0) {
-    $auth_header = substr($auth_header, 7);
+function getAlgorithmObjects() {
+    $keys = getAlgorithmKeys();
+
+    $algorithms = [
+        'none' => new NoneAlgorithm(),
+        'HS256' => new HS256Algorithm($keys['HS256']),
+        'RS256' => new RS256Algorithm($keys['RS256'][0], $keys['RS256'][1]),
+    ];
+    return $algorithms;
 }
 
-$algorithms = [
-    'none' => new NoneAlgorithm(),
-    'HS256' => new HS256Algorithm($shared_key),
-    'RS256' => new RS256Algorithm($private_key, $public_key),
-];
-
-if ($auth_header) {
-    $header = json_decode(base64_decode(substr($auth_header, 0, strpos($auth_header, '.'))));
-    $key = $algorithms[$header->alg];
-    try {
-        $decoded = JWT::decode($auth_header, ['algorithm' => array_values($algorithms)]);
-        echo "Valid JWT: ";
-        print_r($decoded);
-    } catch (Exception $e) {
-        echo "Invalid JWT: $e\n";
-    }
-} else {
-    $token = array(
-        # Issuer
-        "iss" => "http://demo.sjoerdlangkemper.nl/",
-
-        # Issued at
-        "iat" => time(),
-
-        # Expire
-        "exp" => time() + 120,
-
-        "data" => [
-            "hello" => "world"
-        ]
-    );
-
-    foreach ($algorithms as $name => $algorithm) {
-        $jwt = Jwt::encode($token, $algorithm);
-        echo "$name: $jwt\n";
-    }
-
-    echo "Public key: \n$public_key\n";
+function decodeJwt($token) {
+    $algorithms = getAlgorithmObjects();
+    return JWT::decode($token, ['algorithm' => array_values($algorithms)]);
 }
-?>
-</xmp>
 
-<form method="POST">
-    <textarea name="jwt" rows="5" cols="70">
-    </textarea>
-    <br>
-    <input type="submit" value="Send JWT">
-</form>
+function encodeJwt($tokenObj, $algorithmName, $keys) {
+    $algorithms = getAlgorithmObjects();
+    return Jwt::encode($tokenObj, $algorithms[$algorithmName]);
+}
 
-<form method="GET">
-    <input type="submit" value="Get new JWTs">
-</form>
+include('base.php');
