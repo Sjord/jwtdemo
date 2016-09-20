@@ -3,20 +3,23 @@
 <xmp>
 <?php
 
+require_once __DIR__ . '/common.php';
+
+if (!isset($jwtImpl)) {
+    die();
+}
+
 $token = getToken();
-$algorithms = getAlgorithmKeys();
 
 if ($token) {
     try {
-        printValidJwt(decodeJwt($token));
+        printValidJwt($jwtImpl->decodeJwt($token));
     } catch (Exception $e) {
         printInvalidJwt($e);
     }
 } else {
-    foreach ($algorithms as $name => $keys) {
-        $jwt = encodeJwt(createTokenObject(), $name, $keys);
-        echo "$name: $jwt\n";
-    }
+    $jwt = $jwtImpl->encodeJwt(createTokenObject());
+    echo "JWT: $jwt\n";
 }
 ?>
 </xmp>

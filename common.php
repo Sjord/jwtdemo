@@ -9,23 +9,6 @@ function getToken() {
     return $auth_header;
 }
 
-function getAlgorithmKeys() {
-    $shared_key = "secret";
-    $private_key = file_get_contents('private.pem');
-    $public_key = file_get_contents('public.pem');
-
-    return [
-        'none' => '',
-        'HS256' => $shared_key,
-        'RS256' => [$private_key, $public_key],
-    ];
-}
-
-function getAlgorithm($jwt) {
-    $header = json_decode(base64_decode(substr($auth_header, 0, strpos($auth_header, '.'))));
-    return $header->alg;
-}
-
 function createTokenObject() {
     return array(
         # Issuer
