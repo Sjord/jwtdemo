@@ -18,7 +18,7 @@ function createTokenObject() {
         "iat" => time(),
 
         # Expire
-        "exp" => time() + 120,
+        "exp" => time() + 1200,
 
         "data" => [
             "hello" => "world"
