@@ -12,7 +12,7 @@ function getToken() {
 function createTokenObject() {
     return array(
         # Issuer
-        "iss" => "http://demo.sjoerdlangkemper.nl/",
+        "iss" => "https://demo.sjoerdlangkemper.nl/",
 
         # Issued at
         "iat" => time(),

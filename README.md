@@ -3,8 +3,8 @@
 Article: [Attacking JWT authentication](https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/).
 
 Demo pages:
-* [HS256](http://demo.sjoerdlangkemper.nl/jwtdemo/hs256.php)
-* [RS256](http://demo.sjoerdlangkemper.nl/jwtdemo/rs256.php)
+* [HS256](https://demo.sjoerdlangkemper.nl/jwtdemo/hs256.php)
+* [RS256](https://demo.sjoerdlangkemper.nl/jwtdemo/rs256.php)
 
 Attacks:
 * Change the algorithm from HS256 to none.
